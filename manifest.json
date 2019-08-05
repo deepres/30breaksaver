@@ -2,8 +2,9 @@
 	"manifest_version": 2,
 
 	"name": "30min break saver",
+	"short_name": "30breaksaver",
 	"description": "How much time for 30 minutes break?",
-	"version": "0.2",
+	"version": "0.3",
 
 	"browser_action": {
 		"default_icon": "icon.png",
