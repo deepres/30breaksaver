@@ -4,16 +4,16 @@
 	"name": "30min break saver",
 	"short_name": "30breaksaver",
 	"description": "How much time for 30 minutes break?",
-	"version": "0.3",
+	"version": "0.4",
 
-	"browser_action": {
+	"page_action": {
 		"default_icon": "img/icon.png",
 		"default_popup": "popup.html"
 	},
 	"background": {
-		"scripts" : ["js/backgroundScript.js"]
-		},
-	"permissions": [
-		"tabs","<all_urls>"
-	]
+		"scripts": ["js/backgroundScript.js"],
+		"persistent": false
+	  },
+	"permissions": [ "declarativeContent", "activeTab" ]
+
 }
