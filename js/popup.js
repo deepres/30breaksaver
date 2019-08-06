@@ -2,7 +2,7 @@ var badgins = [];
 
 document.addEventListener('DOMContentLoaded', function () {
 
-	var checkPageButton = document.getElementById('checkPage');
+
 	chrome.tabs.query({
 		active: true,
 		lastFocusedWindow: true
