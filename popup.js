@@ -29,7 +29,7 @@ function display_h1(results) {
 
 	var fbadgins = badgins.sort(function(a, b){return a-b}).filter(function(a){ return a > 0;})
 
-	var eight_min = 8 * 60 + 40 + 30;
+	var eight_min = 8 * 60 + 24 + 30;
 	var eight_max = 8 * 60 + 59 + 30;
 
 	var start_minutes = fbadgins[0];
