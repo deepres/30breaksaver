@@ -4,7 +4,7 @@
 	"name": "30min break saver",
 	"short_name": "30breaksaver",
 	"description": "How much time for 30 minutes break?",
-	"version": "0.4",
+	"version": "0.5",
 
 	"page_action": {
 		"default_icon": "img/icon.png",

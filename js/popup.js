@@ -29,22 +29,30 @@ function display_h1(results) {
 
 	var fbadgins = badgins.sort(function(a, b){return a-b}).filter(function(a){ return a > 0;})
 
+	var today = new Date();
+	var curr_minutes = today.getHours() * 60 + today.getMinutes(); 
 	var eight_min = 8 * 60 + 24 + 30;
 	var eight_max = 8 * 60 + 59 + 30;
 
 	var start_minutes = fbadgins[0];
 
+	var elaps_minutes = curr_minutes - start_minutes;
+	var remain_minutes = eight_min - elaps_minutes;
 	var end_min_minutes = start_minutes + eight_min;
 	var end_max_minutes = start_minutes + eight_max;
 
-	var displ_min_time = Math.floor(end_min_minutes / 60) + ':' + end_min_minutes % 60;
-	var displ_max_time = Math.floor(end_max_minutes / 60) + ':' + end_max_minutes % 60;
+	var displ_elaps_time = (Math.floor(elaps_minutes / 60)).toString().padStart(2, '0') + ':' + (elaps_minutes % 60).toString().padStart(2, '0');
+	var displ_remain_time = (Math.floor(remain_minutes / 60)).toString().padStart(2, '0') + ':' + (remain_minutes % 60).toString().padStart(2, '0');
+	var displ_min_time = (Math.floor(end_min_minutes / 60)).toString().padStart(2, '0') + ':' + (end_min_minutes % 60).toString().padStart(2, '0');
+	var displ_max_time = (Math.floor(end_max_minutes / 60)).toString().padStart(2, '0') + ':' + (end_max_minutes % 60).toString().padStart(2, '0');
 
 
 	d = document;
 
 	var f = d.createElement('div');
-	f.innerHTML = "Earliest dep time = " + displ_min_time;
+	f.innerHTML = "Curr work time = " + displ_elaps_time;
+	f.innerHTML += "<br>Remain work time (+30) = " + displ_remain_time;
+	f.innerHTML += "<br>Earliest dep time = " + displ_min_time;
 	f.innerHTML += "<br>Latest dep time = " + displ_max_time;
 
 	d.body.appendChild(f);
