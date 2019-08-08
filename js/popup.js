@@ -113,7 +113,7 @@ function compute_time() {
 
 
 	return {
-		work_minutes: _elaps_minutes - _user_pause,
+		work_minutes: _elaps_minutes - _user_pause - _pause,
 		pause_minutes: _pause,
 		elaps_minutes: _elaps_minutes,
 		worktime_plus_break_min : _worktime_plus_break_min,
