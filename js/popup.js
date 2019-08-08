@@ -29,56 +29,97 @@ function display_h1(results) {
 
 	var fbadgins = badgins.sort(function(a, b){return a-b}).filter(function(a){ return a > 0;})
 
-	var today = new Date();
-	var curr_minutes = today.getHours() * 60 + today.getMinutes(); 
-	var eight_min = 8 * 60 + 24 + 30;
-	var eight_max = 8 * 60 + 59 + 30;
-
-	var start_minutes = fbadgins[0];
-
-	var elaps_minutes = curr_minutes - start_minutes;
-	var remain_minutes = eight_min - elaps_minutes;
-	var end_min_minutes = start_minutes + eight_min;
-	var end_max_minutes = start_minutes + eight_max;
-
-	var displ_elaps_time = (Math.floor(elaps_minutes / 60)).toString().padStart(2, '0') + ':' + (elaps_minutes % 60).toString().padStart(2, '0');
-	var displ_remain_time = (Math.floor(remain_minutes / 60)).toString().padStart(2, '0') + ':' + (remain_minutes % 60).toString().padStart(2, '0');
-	var displ_min_time = (Math.floor(end_min_minutes / 60)).toString().padStart(2, '0') + ':' + (end_min_minutes % 60).toString().padStart(2, '0');
-	var displ_max_time = (Math.floor(end_max_minutes / 60)).toString().padStart(2, '0') + ':' + (end_max_minutes % 60).toString().padStart(2, '0');
-
+	var workstats = compute_time();
 
 	d = document;
 
 	var f = d.createElement('div');
-	f.innerHTML = "Curr work time = " + displ_elaps_time;
-	f.innerHTML += "<br>Remain work time (+30) = " + displ_remain_time;
-	f.innerHTML += "<br>Earliest dep time = " + displ_min_time;
-	f.innerHTML += "<br>Latest dep time = " + displ_max_time;
+	f.innerHTML = "Curr work time = " + format_time(workstats.work_minutes);
+	f.innerHTML += "<br>Curr break time = " + format_time(workstats.pause_minutes);
+	f.innerHTML += "<br>Curr spent / req time = " + format_time(workstats.elaps_minutes) + ' / ' + format_time(workstats.worktime_plus_break_min);
+	f.innerHTML += "<br>Remaining time = " + format_time(workstats.remain_minutes);
+	f.innerHTML += "<br>Earliest dep time = " + format_time(workstats.end_min_minutes, false);
+	
+	if( workstats.end_max_minutes > 0) {
+		f.innerHTML += "<br>Latest dep time = " + format_time(workstats.end_max_minutes, false);
+	}
 
 	d.body.appendChild(f);
 }
 
 function convert_badgin(element) {
 
-	var result = 0;
-	if (element.innerHTML.trim() == "") {
+	if (element.innerHTML.trim() != "") {
 
-		result = -1;
-
-	} else {
+		var result = 0;
 
 		var start_time = '' + element.innerHTML;
 		var hh, mm;
-		var eight_min = 8 * 60 + 40 + 30;
-		var eight_max = 8 * 60 + 59 + 30;
-	
 	
 		hh = start_time.substring(0, 2);
 		mm = start_time.substring(3, 5);
 	
 		result = parseInt(hh) * 60 + parseInt(mm);
+		badgins.push(result);
+
+	}
+}
+
+function format_time(minutes, timer=true) {
+	if( timer ){
+		return (Math.floor(minutes / 60)).toString().padStart(2, '0') + 'h:' + (minutes % 60).toString().padStart(2, '0') + 'm';
+	} else {
+		return (Math.floor(minutes / 60)).toString().padStart(2, '0') + ':' + (minutes % 60).toString().padStart(2, '0');
+	}
+}
+
+function compute_time() {
+
+	var fbadgins = badgins.sort(function(a, b){return a-b}).filter(function(a){ return a > 0;})
+
+	var _work = 0;
+	var _user_pause = 0;
+	var _pause = 30;
+
+	for( var i = 0; i < fbadgins.length-1; ++i){
+
+		if( i % 2 == 0) {
+			_work += fbadgins[i+1] - fbadgins[i];
+		} else {
+			_user_pause += fbadgins[i+1] - fbadgins[i];
+		}
 	}
 
-	badgins.push(result);
+	if( _user_pause > 30 ){
+		_pause += _user_pause - _pause;
+	}
+
+	var today = new Date();
+	var curr_minutes = today.getHours() * 60 + today.getMinutes(); 
+	var start_minutes = fbadgins[0];
+	var _elaps_minutes = curr_minutes - start_minutes + _pause;
+
+	var _worktime_plus_break_min = 8 * 60 + 24 + _pause;
+	var _worktime_plus_break_max = 8 * 60 + 59 + _pause;
+
+	var _remain_minutes = _worktime_plus_break_min - _elaps_minutes;
+	var _end_min_minutes = start_minutes + _worktime_plus_break_min;
+	var _end_max_minutes = start_minutes + _worktime_plus_break_max;
+
+	if( _pause > 60 ) {
+		worktime_plus_break_max = -1;
+		_end_max_minutes = -1;
+	}
+
+
+	return {
+		work_minutes: _elaps_minutes - _user_pause,
+		pause_minutes: _pause,
+		elaps_minutes: _elaps_minutes,
+		worktime_plus_break_min : _worktime_plus_break_min,
+		remain_minutes: _remain_minutes,
+		end_min_minutes: _end_min_minutes,
+		end_max_minutes: _end_max_minutes
+	}
 
 }
