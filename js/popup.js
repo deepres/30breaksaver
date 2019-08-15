@@ -35,7 +35,7 @@ function display_h1(results) {
 
 	var f = d.createElement('div');
 	f.innerHTML = "Curr work time = " + format_time(workstats.work_minutes);
-	f.innerHTML += "<br>Curr break time = " + format_time(workstats.pause_minutes);
+	f.innerHTML += "<br>Curr user / total break time = " + format_time(workstats.user_pause_minutes) + ' / ' + format_time(workstats.pause_minutes);
 	f.innerHTML += "<br>Curr spent / req time = " + format_time(workstats.elaps_minutes) + ' / ' + format_time(workstats.worktime_plus_break_min);
 	f.innerHTML += "<br>Remaining time = " + format_time(workstats.remain_minutes);
 	f.innerHTML += "<br>Earliest dep time = " + format_time(workstats.end_min_minutes, false);
@@ -97,7 +97,8 @@ function compute_time() {
 	var today = new Date();
 	var curr_minutes = today.getHours() * 60 + today.getMinutes(); 
 	var start_minutes = fbadgins[0];
-	var _elaps_minutes = curr_minutes - start_minutes + _pause;
+	var _elaps_minutes = curr_minutes - start_minutes;
+	//alert( "c " + curr_minutes + ' s ' + start_minutes + ' p ' + _pause)
 
 	var _worktime_plus_break_min = 8 * 60 + 24 + _pause;
 	var _worktime_plus_break_max = 8 * 60 + 59 + _pause;
@@ -113,7 +114,8 @@ function compute_time() {
 
 
 	return {
-		work_minutes: _elaps_minutes - _user_pause - _pause,
+		work_minutes: _elaps_minutes - _pause,
+		user_pause_minutes: _user_pause,
 		pause_minutes: _pause,
 		elaps_minutes: _elaps_minutes,
 		worktime_plus_break_min : _worktime_plus_break_min,
