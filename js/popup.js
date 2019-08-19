@@ -90,7 +90,9 @@ function compute_time() {
 		}
 	}
 
-	if( _user_pause > 30 ){
+	if( _user_pause < 30 ) {
+	
+	} else {
 		_pause += _user_pause - _pause;
 	}
 
@@ -98,12 +100,13 @@ function compute_time() {
 	var curr_minutes = today.getHours() * 60 + today.getMinutes(); 
 	var start_minutes = fbadgins[0];
 	var _elaps_minutes = curr_minutes - start_minutes;
+	var _elaps_minutes_with_pause = _elaps_minutes + _pause;
 	//alert( "c " + curr_minutes + ' s ' + start_minutes + ' p ' + _pause)
 
 	var _worktime_plus_break_min = 8 * 60 + 24 + _pause;
 	var _worktime_plus_break_max = 8 * 60 + 59 + _pause;
 
-	var _remain_minutes = _worktime_plus_break_min - _elaps_minutes;
+	var _remain_minutes = _worktime_plus_break_min - _elaps_minutes_with_pause;
 	var _end_min_minutes = start_minutes + _worktime_plus_break_min;
 	var _end_max_minutes = start_minutes + _worktime_plus_break_max;
 
@@ -114,10 +117,10 @@ function compute_time() {
 
 
 	return {
-		work_minutes: _elaps_minutes - _pause,
+		work_minutes: _elaps_minutes - _user_pause,
 		user_pause_minutes: _user_pause,
 		pause_minutes: _pause,
-		elaps_minutes: _elaps_minutes,
+		elaps_minutes: _elaps_minutes_with_pause,
 		worktime_plus_break_min : _worktime_plus_break_min,
 		remain_minutes: _remain_minutes,
 		end_min_minutes: _end_min_minutes,
